@@ -140,8 +140,9 @@ class authemail extends \euroglas\eurorest\auth
         $dbTable = $this->config[$this->name()]['table'];
         $usrField = $this->config[$this->name()]['loginField'];
         $passField = $this->config[$this->name()]['passwField'];
+        $nameField = $this->config[$this->name()]['nameField'];
 
-        $query = "SELECT {$usrField} AS login, {$passField} AS pass FROM {$dbTable} WHERE {$usrField} = '{$testLogin}'";
+        $query = "SELECT {$usrField} AS login, {$passField} AS pass, {$nameField} AS name FROM {$dbTable} WHERE {$usrField} = '{$testLogin}'";
 
 
         $sth = $this->dbRing->query($query,\PDO::FETCH_ASSOC);
@@ -177,8 +178,8 @@ class authemail extends \euroglas\eurorest\auth
 
         $uData = array();
         $uData['login'] = $datosDelCliente['login'];
-        $uData['name'] = $datosDelCliente['login'];
-        $uData['vrfy'] = 'login';
+        $uData['name'] = $datosDelCliente['name'];
+        $uData['vrfy'] = 'email';
 
         die($this->generaToken( $uData ));
     }
