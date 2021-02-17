@@ -163,6 +163,8 @@ class authemail extends \euroglas\eurorest\auth
 
         if( empty( $datosDelCliente ) )
         {
+            // No queremos enviar la contraseña de nuevo
+            unset($args['password']);
             header('content-type: application/json');
             http_response_code(401); // 401 Unauthorized
             die(json_encode( array(
@@ -175,6 +177,17 @@ class authemail extends \euroglas\eurorest\auth
             // print_r($datosDelCliente);
         }
 
+        if( false === password_verify($testPass, $datosDelCliente['pass'] ))
+        {
+            header('content-type: application/json');
+            http_response_code(401); // 401 Unauthorized
+            die(json_encode( array(
+                'codigo' => 401003,
+                'mensaje' => 'No autorizado',
+                'descripcion' => 'Contraseña invalida',
+                'detalles' => $args
+            )));
+        }
 
         $uData = array();
         $uData['login'] = $datosDelCliente['login'];
@@ -267,6 +280,16 @@ class authemail extends \euroglas\eurorest\auth
 	{
 		//print("AuthName Requested: ".$this->authName);
 		die( $this->authName );
+    }
+
+    private function randomPassword()
+    {
+        $d = new DateTime('NOW');
+        $changingString = $d->format('Y-m-d\TH:i:s.u');
+        $hash = crc32($changingString);
+        $b64 = base64_encode( $hash );
+
+        return $b64;
     }
     
     private $config = array();
