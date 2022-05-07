@@ -21,7 +21,7 @@ class authemail extends \euroglas\eurorest\auth
         $items['/auth/name']['GET'] = array(
             'name' => 'Nombre del cliente autenticado',
             'callback' => 'getAuthName',
-            'token_required' => TRUE,
+            'token_required' => false,
         );
 
         return $items;
